@@ -11,7 +11,8 @@ var express = require('express'),
 mongoose.connect('mongodb+srv://spicysos:978645zz@cluster0-sqgci.mongodb.net/test?retryWrites=true&w=majority');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
-
+app.use(express.static(__dirname + '/public'))
+console.log(__dirname);
 app.get('/', function (req, res) {
 	res.redirect('/campgrounds');
 });
