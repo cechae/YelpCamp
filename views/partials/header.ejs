@@ -2,7 +2,6 @@
 <html>
 	
 	<head>
-		
 		<title>YelpCamp</title>
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
 		<link href='/stylesheets/main.css' rel="stylesheet">
@@ -17,9 +16,13 @@
 			</div>
 			<div class='collapse navbar-collapse'>
 				<ul class='nav navbar-nav navbar-right'>
-					<li><a href='/'>Log In</a></li>
-					<li><a href='/'>Sign Up</a></li>
-					<li><a href='/'>Log Out</a></li>
+					<% if (!currentUser){ %>
+						<li><a href='/login'>Log In</a></li>
+						<li><a href='/register'>Sign Up</a></li>
+						<% } else { %>
+						<li><a href="#"">Signed In As <span style="color:blueviolet"><%=currentUser.username%></span></a></li>
+						<li><a href='/logout'>Log Out</a></li>
+					 <% } %>
 				</ul>
 			</div>
 
