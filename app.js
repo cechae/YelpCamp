@@ -7,6 +7,7 @@ var express = require('express'),
 	Campground = require('./models/campground'),
 	Comment = require('./models/comment'),
 	User = require("./models/user"),
+	methodOverride = require("method-override"),
 	seedDB = require('./seeds');
 
 var commentRoutes = require("./routes/comments"),
@@ -21,6 +22,7 @@ app.use(require("express-session")({
 	resave: false,
 	saveUninitialized: false
 }));
+app.use(methodOverride("_method"));
 
 mongoose.connect('mongodb+srv://spicysos:978645zz@cluster0-sqgci.mongodb.net/test?retryWrites=true&w=majority');
 app.use(bodyParser.urlencoded({ extended: true }));
