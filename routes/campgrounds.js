@@ -53,18 +53,16 @@ router.get('/:id', function (req, res) {
 	});
 });
 
-// edit campgroound route
-router.get("/:id/edit", function(req,res){
+// edit campground route
+router.get("/:id/edit", checkCampgroundOwnership, function(req,res){
 	Campground.findById(req.params.id, function(err,foundCampground){
-		if (err) res.redirect("/campgrounds")
-		else {
-			res.render("campgrounds/edit", {campground:foundCampground});
-		}
+
+		res.render("campgrounds/edit", {campground: foundCampground});
 	})
 })
 
 //update campgroound
-router.put("/:id", function(req,res){
+router.put("/:id", checkCampgroundOwnership, function(req,res){
 	// we need to find and update the correct campground
 	
 	Campground.findByIdAndUpdate(req.params.id, req.body.campground, function(err,body){
@@ -77,7 +75,7 @@ router.put("/:id", function(req,res){
 })
 
 // DESTROY campground route
-router.delete("/:id", function(req,res){
+router.delete("/:id", checkCampgroundOwnership, function(req,res){
 	Campground.findByIdAndRemove(req.params.id, function(err,body){
 		if (err) res.redirect("/campgrounds")
 		else {
@@ -92,6 +90,29 @@ function isLoggedIn(req,res,next){
 		return next();
 	}
 	res.redirect("/login");
+}
+
+function checkCampgroundOwnership(req,res,next){
+	if (req.isAuthenticated()){
+		// if logged in, does the user own this campground?
+		Campground.findById(req.params.id, function(err,foundCampground){
+			if (err) {
+				res.redirect("back")
+			}
+			else {
+				// does the user own the campground?
+				// NOTE: foundCampground.author.id is NOT a string, but Mongoose object.
+				if (foundCampground.author.id.equals(req.user._id)){
+					next();
+				} else {
+					res.redirect("back")
+				}
+			}
+		})
+	} else {
+		// if not, redirect back to where user came from.
+		res.redirect("back");
+	}
 }
 
 module.exports = router;
