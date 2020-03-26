@@ -2,6 +2,7 @@ var express = require('express'),
 	app = express(),
 	bodyParser = require('body-parser'),
 	mongoose = require('mongoose'),
+	flash = require("connect-flash"),
 	passport = require("passport"),
 	LocalStrategy = require("passport-local"),
 	Campground = require('./models/campground'),
@@ -23,7 +24,7 @@ app.use(require("express-session")({
 	saveUninitialized: false
 }));
 app.use(methodOverride("_method"));
-
+app.use(flash());
 mongoose.connect('mongodb+srv://spicysos:978645zz@cluster0-sqgci.mongodb.net/test?retryWrites=true&w=majority');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs'); 
