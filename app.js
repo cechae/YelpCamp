@@ -38,8 +38,11 @@ passport.deserializeUser(User.deserializeUser());
 app.use(function(req,res,next){
 	res.locals.currentUser = req.user;
 	// this function will run for every route. 
+	res.locals.error = req.flash("error");
+	res.locals.success = req.flash("success")
 	next();
 });
+
 
 app.use("/", authRoutes)
 app.use("/campgrounds",campgrounudRoutes)

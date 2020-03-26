@@ -26,12 +26,13 @@ router.post('/', middleware.isLoggedIn, function (req, res) {
 	let n = req.body.name;
 	let img = req.body.image;
 	let des = req.body.description;
+	let price = req.body.price;
 	let author = {
 		id: req.user._id,
 		username: req.user.username
 	}
 	
-	let newCampground = { name: n, image: img, description: des, author:author };
+	let newCampground = { name: n, image: img, description: des, author:author, price: price };
 	
 	//create a new campground and save it to the mongodb
 	Campground.create(newCampground, function (error, newlyCreated) {
@@ -49,6 +50,9 @@ router.get('/:id', function (req, res) {
 		if (err) {
 			console.log('error!', err);
 		} else {
+			if (!foundCampground) {
+                return res.status(400).send("Item not found.")
+            }
 			res.render('campgrounds/show', { campground: foundCampground });
 		}
 	});
@@ -57,7 +61,9 @@ router.get('/:id', function (req, res) {
 // edit campground route
 router.get("/:id/edit", middleware.checkCampgroundOwnership, function(req,res){
 	Campground.findById(req.params.id, function(err,foundCampground){
-
+		if (!foundCampground) {
+            return res.status(400).send("Item not found.")
+        }
 		res.render("campgrounds/edit", {campground: foundCampground});
 	})
 })
